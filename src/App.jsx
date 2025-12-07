@@ -7,6 +7,49 @@ import { saveAs } from "file-saver";
 // ---------- CONTRACT TEMPLATES (DIFFERENT PROFESSIONS) ----------
 const contractTemplates = [
   {
+  id: "service_agreement_basic",
+  profession: "General Service",
+  name: "Service Agreement (Basic)",
+  description: "Simple service agreement for freelancers and small businesses.",
+  jurisdiction: "Nigeria",
+  inputs: [
+    { name: "client_name", label: "Client Name", type: "text", required: true },
+    { name: "provider_name", label: "Service Provider Name", type: "text", required: true },
+    {
+      name: "service_description",
+      label: "Service Description",
+      type: "textarea",
+      required: true
+    },
+    { name: "start_date", label: "Start Date", type: "date", required: true },
+    { name: "payment_amount", label: "Payment Amount", type: "number", required: true },
+    { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true },
+    { name: "late_fee", label: "Late Fee Percentage (0 if none)", type: "number", required: true }
+  ],
+  body: [
+    {
+      text: `This Service Agreement ("Agreement") is made between {{client_name}} ("Client") and {{provider_name}} ("Service Provider").`
+    },
+    {
+      text: `The Service Provider agrees to provide the following services: {{service_description}} starting on {{start_date}}.`
+    },
+    {
+      text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services provided under this Agreement.`
+    },
+    {
+      showIf: data => Number(data.late_fee) > 0,
+      text: `If the Client fails to make any payment on time, a late fee of {{late_fee}}% may be charged on the outstanding amount.`
+    },
+    {
+      text: `This Agreement is governed by the laws of Nigeria.`
+    },
+    {
+      text: `Both parties agree to act in good faith and to communicate promptly regarding any issues that arise in connection with the services.`
+    }
+  ]
+}
+,
+  {
     id: "service_agreement_webdev",
     profession: "Web Developer",
     name: "Freelance Web Development Agreement",
@@ -151,7 +194,181 @@ const contractTemplates = [
         : ` and continue until terminated by either party`;
       return { ...data, end_date_clause: end };
     }
-  }
+  },
+  {
+  id: "service_agreement_smm",
+  profession: "Social Media Manager",
+  name: "Social Media Management Agreement",
+  description: "Content creation, posting, and account management services.",
+  jurisdiction: "Nigeria",
+  inputs: [
+    { name: "client_name", label: "Client / Business Name", type: "text", required: true },
+    { name: "provider_name", label: "Social Media Manager Name", type: "text", required: true },
+    {
+      name: "platforms",
+      label: "Platforms Managed (e.g. Instagram, X, TikTok)",
+      type: "text",
+      required: true
+    },
+    {
+      name: "services",
+      label: "Description of Services",
+      type: "textarea",
+      required: true
+    },
+    { name: "start_date", label: "Start Date", type: "date", required: true },
+    { name: "fee", label: "Monthly / Project Fee", type: "number", required: true },
+    { name: "currency", label: "Currency", type: "text", required: true }
+  ],
+  body: [
+    {
+      text: `This Social Media Management Agreement ("Agreement") is entered into between {{client_name}} ("Client") and {{provider_name}} ("Service Provider").`
+    },
+    {
+      text: `The Service Provider agrees to manage the Client’s social media presence on the following platforms: {{platforms}} and provide the following services: {{services}}.`
+    },
+    {
+      text: `Services shall commence on {{start_date}} and will continue unless terminated by either party in writing.`
+    },
+    {
+      text: `The Client agrees to pay {{fee}} {{currency}} for the services rendered. Payment terms will be agreed upon separately where necessary.`
+    },
+    {
+      text: `The Service Provider does not guarantee specific audience growth, engagement metrics, or revenue outcomes.`
+    },
+    {
+      text: `This Agreement is governed by the laws of Nigeria.`
+    }
+  ]
+},
+{
+  id: "service_agreement_graphic_design",
+  profession: "Graphic Designer",
+  name: "Graphic Design Services Agreement",
+  description: "Logos, branding, marketing, and digital design services.",
+  jurisdiction: "Nigeria",
+  inputs: [
+    { name: "client_name", label: "Client Name", type: "text", required: true },
+    { name: "designer_name", label: "Designer Name", type: "text", required: true },
+    {
+      name: "design_scope",
+      label: "Design Scope / Deliverables",
+      type: "textarea",
+      required: true
+    },
+    { name: "deadline", label: "Delivery Deadline", type: "date", required: true },
+    { name: "payment_amount", label: "Total Fee", type: "number", required: true },
+    { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
+  ],
+  body: [
+    {
+      text: `This Graphic Design Services Agreement ("Agreement") is made between {{client_name}} ("Client") and {{designer_name}} ("Designer").`
+    },
+    {
+      text: `The Designer agrees to provide the following design services: {{design_scope}}.`
+    },
+    {
+      text: `The Designer shall deliver the final design materials on or before {{deadline}}.`
+    },
+    {
+      text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services provided under this Agreement.`
+    },
+    {
+      text: `All intellectual property remains with the Designer until full payment is received. Upon payment, ownership or license terms will apply as agreed.`
+    },
+    {
+      text: `This Agreement is governed by the laws of Nigeria.`
+    }
+  ]
+},
+{
+  id: "service_agreement_hair_stylist",
+  profession: "Hair Stylist / Barber",
+  name: "Personal Grooming Services Agreement",
+  description: "Haircut, styling, and grooming services.",
+  jurisdiction: "Nigeria",
+  inputs: [
+    { name: "client_name", label: "Client Name", type: "text", required: true },
+    { name: "stylist_name", label: "Stylist / Barber Name", type: "text", required: true },
+    {
+      name: "service_type",
+      label: "Type of Service (e.g. haircut, braids, beard trim)",
+      type: "text",
+      required: true
+    },
+    {
+      name: "appointment_date",
+      label: "Appointment Date",
+      type: "date",
+      required: true
+    },
+    { name: "price", label: "Service Fee", type: "number", required: true },
+    { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
+  ],
+  body: [
+    {
+      text: `This Personal Grooming Services Agreement ("Agreement") is entered into between {{client_name}} ("Client") and {{stylist_name}} ("Service Provider").`
+    },
+    {
+      text: `The Service Provider agrees to perform the following service: {{service_type}} on {{appointment_date}}.`
+    },
+    {
+      text: `The Client agrees to pay {{price}} {{currency}} for the service upon completion unless otherwise agreed.`
+    },
+    {
+      text: `The Service Provider agrees to perform services professionally and in accordance with standard industry practices.`
+    },
+    {
+      text: `This Agreement is governed by the laws of Nigeria.`
+    }
+  ]
+},
+{
+  id: "service_agreement_mechanic",
+  profession: "Auto Mechanic",
+  name: "Vehicle Repair Services Agreement",
+  description: "Vehicle maintenance and repair services.",
+  jurisdiction: "Nigeria",
+  inputs: [
+    { name: "client_name", label: "Vehicle Owner Name", type: "text", required: true },
+    { name: "mechanic_name", label: "Mechanic / Workshop Name", type: "text", required: true },
+    {
+      name: "vehicle_details",
+      label: "Vehicle Details (make, model, plate number)",
+      type: "text",
+      required: true
+    },
+    {
+      name: "repair_description",
+      label: "Description of Repairs",
+      type: "textarea",
+      required: true
+    },
+    { name: "estimated_cost", label: "Estimated Cost", type: "number", required: true },
+    { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
+  ],
+  body: [
+    {
+      text: `This Vehicle Repair Services Agreement ("Agreement") is made between {{client_name}} ("Client") and {{mechanic_name}} ("Service Provider").`
+    },
+    {
+      text: `The Service Provider agrees to perform the following repairs on the vehicle described as {{vehicle_details}}: {{repair_description}}.`
+    },
+    {
+      text: `The estimated repair cost is {{estimated_cost}} {{currency}}. Any additional costs must be approved by the Client before proceeding.`
+    },
+    {
+      text: `The Service Provider is not responsible for pre-existing faults or issues unrelated to the agreed repairs.`
+    },
+    {
+      text: `This Agreement is governed by the laws of Nigeria.`
+    }
+  ]
+}
+
+
+
+
 ];
 
 // ---------- TEMPLATE RENDER HELPERS ----------
@@ -323,10 +540,18 @@ function App() {
   );
   const [formData, setFormData] = useState({});
   const [step, setStep] = useState(1); // 1 = choose template, 2 = fill form, 3 = preview & download
+ const [showAllTemplates, setShowAllTemplates] = useState(false);
+
+ 
 
   const selectedTemplate = useMemo(
     () => contractTemplates.find(t => t.id === selectedTemplateId),
     [selectedTemplateId]
+  );
+
+  const visibleTemplates = useMemo(
+    () => (showAllTemplates ? contractTemplates : contractTemplates.slice(0, 4)),
+    [showAllTemplates]
   );
 
   const handleInputChange = (name, value) => {
@@ -403,51 +628,65 @@ function App() {
         <div className="grid gap-4 md:grid-cols-[1.1fr_minmax(0,1fr)]">
           {/* Left side */}
           <div className="rounded-xl bg-slate-950/60 p-3 sm:p-4">
-            {step === 1 && (
-              <section>
-                <h2 className="mb-1 text-base font-medium sm:text-lg">
-                  Select a contract
-                </h2>
-                <p className="mb-3 text-xs text-slate-400 sm:text-sm">
-                  Pick a template based on the profession and type of work.
-                </p>
+          {step === 1 && (
+  <section>
+    <h2 className="mb-1 text-base font-medium sm:text-lg">
+      Select a contract
+    </h2>
+    <p className="mb-3 text-xs text-slate-400 sm:text-sm">
+      Pick a template based on the profession and type of work.
+    </p>
 
-                <div className="flex flex-col gap-2">
-                  {contractTemplates.map(template => {
-                    const isActive = template.id === selectedTemplateId;
-                    return (
-                      <button
-                        key={template.id}
-                        type="button"
-                        onClick={() => setSelectedTemplateId(template.id)}
-                        className={[
-                          "w-full rounded-xl border px-3 py-3 text-left text-sm transition",
-                          "bg-slate-950/80 hover:border-slate-500 hover:bg-slate-900",
-                          isActive
-                            ? "border-blue-400 bg-slate-900/80 shadow-[0_0_0_1px_rgba(96,165,250,0.35)]"
-                            : "border-slate-800"
-                        ].join(" ")}
-                      >
-                        <div className="mb-1 flex items-center justify-between text-xs text-slate-400">
-                          <span className="rounded-full bg-slate-900 px-2 py-0.5 text-[10px] uppercase tracking-wide text-blue-300">
-                            {template.profession}
-                          </span>
-                          <span className="text-[10px] text-slate-500">
-                            Jurisdiction: {template.jurisdiction}
-                          </span>
-                        </div>
-                        <div className="mb-1 text-sm font-semibold text-slate-100">
-                          {template.name}
-                        </div>
-                        <div className="text-[11px] text-slate-400">
-                          {template.description}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
+    <div className="flex flex-col gap-2">
+      {visibleTemplates.map(template => {
+        const isActive = template.id === selectedTemplateId;
+        return (
+          <button
+            key={template.id}
+            type="button"
+            onClick={() => setSelectedTemplateId(template.id)}
+            className={[
+              "w-full rounded-xl border px-3 py-3 text-left text-sm transition",
+              "bg-slate-950/80 hover:border-slate-500 hover:bg-slate-900",
+              isActive
+                ? "border-blue-400 bg-slate-900/80 shadow-[0_0_0_1px_rgba(96,165,250,0.35)]"
+                : "border-slate-800"
+            ].join(" ")}
+          >
+            <div className="mb-1 flex items-center justify-between text-xs text-slate-400">
+              <span className="rounded-full bg-slate-900 px-2 py-0.5 text-[10px] uppercase tracking-wide text-blue-300">
+                {template.profession}
+              </span>
+              <span className="text-[10px] text-slate-500">
+                Jurisdiction: {template.jurisdiction}
+              </span>
+            </div>
+            <div className="mb-1 text-sm font-semibold text-slate-100">
+              {template.name}
+            </div>
+            <div className="text-[11px] text-slate-400">
+              {template.description}
+            </div>
+          </button>
+        );
+      })}
+    </div>
+
+    {/* View more – one-way expand */}
+    {!showAllTemplates && contractTemplates.length > 4 && (
+      <div className="mt-3">
+        <button
+          type="button"
+          onClick={() => setShowAllTemplates(true)}
+          className="text-xs sm:text-sm font-medium text-blue-300 hover:text-blue-200"
+        >
+          View more templates
+        </button>
+      </div>
+    )}
+  </section>
+)}
+
 
             {step === 2 && selectedTemplate && (
               <section>
