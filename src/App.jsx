@@ -3,6 +3,8 @@ import { useMemo, useState } from "react";
 import { jsPDF } from "jspdf";
 import { Document, Packer, Paragraph } from "docx";
 import { saveAs } from "file-saver";
+import logo from "./assets/logo.png";
+
 
 // ---------- CONTRACT TEMPLATES (DIFFERENT PROFESSIONS) ----------
 const contractTemplates = [
@@ -15,37 +17,22 @@ const contractTemplates = [
     inputs: [
       { name: "client_name", label: "Client Name", type: "text", required: true },
       { name: "provider_name", label: "Service Provider Name", type: "text", required: true },
-      {
-        name: "service_description",
-        label: "Service Description",
-        type: "textarea",
-        required: true
-      },
+      { name: "service_description", label: "Service Description", type: "textarea", required: true },
       { name: "start_date", label: "Start Date", type: "date", required: true },
       { name: "payment_amount", label: "Payment Amount", type: "number", required: true },
       { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true },
       { name: "late_fee", label: "Late Fee Percentage (0 if none)", type: "number", required: true }
     ],
     body: [
-      {
-        text: `This Service Agreement ("Agreement") is made between {{client_name}} ("Client") and {{provider_name}} ("Service Provider").`
-      },
-      {
-        text: `The Service Provider agrees to provide the following services: {{service_description}} starting on {{start_date}}.`
-      },
-      {
-        text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services provided under this Agreement.`
-      },
+      { text: `This Service Agreement ("Agreement") is made between {{client_name}} ("Client") and {{provider_name}} ("Service Provider").` },
+      { text: `The Service Provider agrees to provide the following services: {{service_description}} starting on {{start_date}}.` },
+      { text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services provided under this Agreement.` },
       {
         showIf: data => Number(data.late_fee) > 0,
         text: `If the Client fails to make any payment on time, a late fee of {{late_fee}}% may be charged on the outstanding amount.`
       },
-      {
-        text: `This Agreement is governed by the laws of Nigeria.`
-      },
-      {
-        text: `Both parties agree to act in good faith and to communicate promptly regarding any issues that arise in connection with the services.`
-      }
+      { text: `This Agreement is governed by the laws of Nigeria.` },
+      { text: `Both parties agree to act in good faith and to communicate promptly regarding any issues that arise in connection with the services.` }
     ]
   },
   {
@@ -57,44 +44,24 @@ const contractTemplates = [
     inputs: [
       { name: "client_name", label: "Client / Company Name", type: "text", required: true },
       { name: "provider_name", label: "Developer Name", type: "text", required: true },
-      {
-        name: "project_scope",
-        label: "Project Scope (what you are building)",
-        type: "textarea",
-        required: true
-      },
+      { name: "project_scope", label: "Project Scope (what you are building)", type: "textarea", required: true },
       { name: "start_date", label: "Start Date", type: "date", required: true },
       { name: "end_date", label: "Estimated Completion Date", type: "date", required: true },
       { name: "payment_amount", label: "Total Project Fee", type: "number", required: true },
       { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true },
-      {
-        name: "payment_schedule",
-        label: "Payment Schedule (e.g. 50% upfront, 50% on delivery)",
-        type: "text",
-        required: true
-      },
+      { name: "payment_schedule", label: "Payment Schedule (e.g. 50% upfront, 50% on delivery)", type: "text", required: true },
       { name: "late_fee", label: "Late Fee Percentage (0 if none)", type: "number", required: true }
     ],
     body: [
-      {
-        text: `This Freelance Web Development Agreement ("Agreement") is made between {{client_name}} ("Client") and {{provider_name}} ("Developer").`
-      },
-      {
-        text: `The Developer agrees to design, build and deliver the following project: {{project_scope}} (the "Project"). The Project will commence on {{start_date}} with an estimated completion date of {{end_date}}.`
-      },
-      {
-        text: `The Client agrees to pay a total fee of {{payment_amount}} {{currency}} for the Project. The agreed payment schedule is as follows: {{payment_schedule}}.`
-      },
+      { text: `This Freelance Web Development Agreement is made between {{client_name}} ("Client") and {{provider_name}} ("Developer").` },
+      { text: `The Developer agrees to design, build and deliver the following project: {{project_scope}} . The Project will commence on {{start_date}} with an estimated completion date of {{end_date}}.` },
+      { text: `The Client agrees to pay a total fee of {{payment_amount}} {{currency}} for the Project. The agreed payment schedule is as follows: {{payment_schedule}} upfront.` },
       {
         showIf: data => Number(data.late_fee) > 0,
         text: `If payment is not made on time, a late fee of {{late_fee}}% may be charged on any overdue amount at the Developer's discretion.`
       },
-      {
-        text: `All intellectual property in the Project will remain with the Developer until full payment is received. Upon full payment, the Client will receive a license to use the deliverables for its business purposes.`
-      },
-      {
-        text: `This Agreement is governed by the laws of Nigeria, and both parties agree to resolve disputes in good faith before considering legal action.`
-      }
+      { text: `All intellectual property in the Project will remain with the Developer until full payment is received. Upon full payment, the Client will receive a license to use the deliverables for its business purposes.` },
+      { text: `This Agreement is governed by the laws of Nigeria, and both parties agree to resolve disputes in good faith before considering legal action.` }
     ]
   },
   {
@@ -106,43 +73,21 @@ const contractTemplates = [
     inputs: [
       { name: "client_name", label: "Client Name", type: "text", required: true },
       { name: "provider_name", label: "Photographer Name / Studio", type: "text", required: true },
-      {
-        name: "event_description",
-        label: "Event / Shoot Description",
-        type: "textarea",
-        required: true
-      },
+      { name: "event_description", label: "Event / Shoot Description", type: "textarea", required: true },
       { name: "event_date", label: "Event / Shoot Date", type: "date", required: true },
       { name: "location", label: "Location", type: "text", required: true },
       { name: "hours", label: "Number of Hours", type: "number", required: true },
       { name: "payment_amount", label: "Total Fee", type: "number", required: true },
       { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true },
-      {
-        name: "deliverables",
-        label: "Deliverables (e.g. 50 edited photos, online gallery)",
-        type: "textarea",
-        required: true
-      }
+      { name: "deliverables", label: "Deliverables (e.g. 50 edited photos, online gallery)", type: "textarea", required: true }
     ],
     body: [
-      {
-        text: `This Photography Service Agreement ("Agreement") is made between {{client_name}} ("Client") and {{provider_name}} ("Photographer").`
-      },
-      {
-        text: `The Photographer agrees to provide photography services for the following: {{event_description}}, to take place on {{event_date}} at {{location}} for an estimated duration of {{hours}} hours.`
-      },
-      {
-        text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services. Unless otherwise agreed in writing, payment is due on or before the event date.`
-      },
-      {
-        text: `The Photographer will deliver the following after the event: {{deliverables}}. Delivery timelines will be communicated to the Client and may vary depending on workload and editing requirements.`
-      },
-      {
-        text: `The Photographer retains copyright to all images created under this Agreement but grants the Client a personal, non-exclusive license to use the delivered images for personal or business promotion, unless otherwise restricted in writing.`
-      },
-      {
-        text: `This Agreement is governed by the laws of Nigeria. Both parties agree to act in good faith and communicate promptly regarding any changes or issues.`
-      }
+      { text: `This Photography Service Agreement ("Agreement") is made between {{client_name}} ("Client") and {{provider_name}} ("Photographer").` },
+      { text: `The Photographer agrees to provide photography services for the following: {{event_description}}, to take place on {{event_date}} at {{location}} for an estimated duration of {{hours}} hours.` },
+      { text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services. Unless otherwise agreed in writing, payment is due on or before the event date.` },
+      { text: `The Photographer will deliver the following after the event: {{deliverables}}. Delivery timelines will be communicated to the Client and may vary depending on workload and editing requirements.` },
+      { text: `The Photographer retains copyright to all images created under this Agreement but grants the Client a personal, non-exclusive license to use the delivered images for personal or business promotion, unless otherwise restricted in writing.` },
+      { text: `This Agreement is governed by the laws of Nigeria. Both parties agree to act in good faith and communicate promptly regarding any changes or issues.` }
     ]
   },
   {
@@ -154,43 +99,21 @@ const contractTemplates = [
     inputs: [
       { name: "client_name", label: "Client / Company Name", type: "text", required: true },
       { name: "provider_name", label: "Consultant Name", type: "text", required: true },
-      {
-        name: "service_description",
-        label: "Description of Consulting Services",
-        type: "textarea",
-        required: true
-      },
+      { name: "service_description", label: "Description of Consulting Services", type: "textarea", required: true },
       { name: "start_date", label: "Start Date", type: "date", required: true },
-      {
-        name: "end_date",
-        label: "End Date (or leave blank if ongoing)",
-        type: "date",
-        required: false
-      },
+      { name: "end_date", label: "End Date (or leave blank if ongoing)", type: "date", required: false },
       { name: "rate", label: "Rate (e.g. per month, per session)", type: "text", required: true },
       { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
     ],
     body: [
-      {
-        text: `This Consulting Services Agreement ("Agreement") is made between {{client_name}} ("Client") and {{provider_name}} ("Consultant").`
-      },
-      {
-        text: `The Consultant agrees to provide the following services to the Client: {{service_description}}. Services will commence on {{start_date}}{{end_date_clause}}.`
-      },
-      {
-        text: `The Client agrees to pay the Consultant at the rate of {{rate}} in {{currency}}. Payment terms and invoicing frequency will be agreed between the parties in writing.`
-      },
-      {
-        text: `Any confidential information shared between the parties will be kept confidential and used only for the purpose of this Agreement.`
-      },
-      {
-        text: `This Agreement is governed by the laws of Nigeria, and any disputes will first be addressed through good faith negotiation.`
-      }
+      { text: `This Consulting Services Agreement ("Agreement") is made between {{client_name}} ("Client") and {{provider_name}} ("Consultant").` },
+      { text: `The Consultant agrees to provide the following services to the Client: {{service_description}}. Services will commence on {{start_date}}{{end_date_clause}}.` },
+      { text: `The Client agrees to pay the Consultant at the rate of {{rate}} in {{currency}}. Payment terms and invoicing frequency will be agreed between the parties in writing.` },
+      { text: `Any confidential information shared between the parties will be kept confidential and used only for the purpose of this Agreement.` },
+      { text: `This Agreement is governed by the laws of Nigeria, and any disputes will first be addressed through good faith negotiation.` }
     ],
     transformData: data => {
-      const end = data.end_date
-        ? ` and continue until ${data.end_date}`
-        : ` and continue until terminated by either party`;
+      const end = data.end_date ? ` and continue until ${data.end_date}` : ` and continue until terminated by either party`;
       return { ...data, end_date_clause: end };
     }
   },
@@ -203,41 +126,19 @@ const contractTemplates = [
     inputs: [
       { name: "client_name", label: "Client / Business Name", type: "text", required: true },
       { name: "provider_name", label: "Social Media Manager Name", type: "text", required: true },
-      {
-        name: "platforms",
-        label: "Platforms Managed (e.g. Instagram, X, TikTok)",
-        type: "text",
-        required: true
-      },
-      {
-        name: "services",
-        label: "Description of Services",
-        type: "textarea",
-        required: true
-      },
+      { name: "platforms", label: "Platforms Managed (e.g. Instagram, X, TikTok)", type: "text", required: true },
+      { name: "services", label: "Description of Services", type: "textarea", required: true },
       { name: "start_date", label: "Start Date", type: "date", required: true },
       { name: "fee", label: "Monthly / Project Fee", type: "number", required: true },
-      { name: "currency", label: "Currency", type: "text", required: true }
+      { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
     ],
     body: [
-      {
-        text: `This Social Media Management Agreement ("Agreement") is entered into between {{client_name}} ("Client") and {{provider_name}} ("Service Provider").`
-      },
-      {
-        text: `The Service Provider agrees to manage the Client’s social media presence on the following platforms: {{platforms}} and provide the following services: {{services}}.`
-      },
-      {
-        text: `Services shall commence on {{start_date}} and will continue unless terminated by either party in writing.`
-      },
-      {
-        text: `The Client agrees to pay {{fee}} {{currency}} for the services rendered. Payment terms will be agreed upon separately where necessary.`
-      },
-      {
-        text: `The Service Provider does not guarantee specific audience growth, engagement metrics, or revenue outcomes.`
-      },
-      {
-        text: `This Agreement is governed by the laws of Nigeria.`
-      }
+      { text: `This Social Media Management Agreement ("Agreement") is entered into between {{client_name}} ("Client") and {{provider_name}} ("Service Provider").` },
+      { text: `The Service Provider agrees to manage the Client’s social media presence on the following platforms: {{platforms}} and provide the following services: {{services}}.` },
+      { text: `Services shall commence on {{start_date}} and will continue unless terminated by either party in writing.` },
+      { text: `The Client agrees to pay {{fee}} {{currency}} for the services rendered. Payment terms will be agreed upon separately where necessary.` },
+      { text: `The Service Provider does not guarantee specific audience growth, engagement metrics, or revenue outcomes.` },
+      { text: `This Agreement is governed by the laws of Nigeria.` }
     ]
   },
   {
@@ -249,35 +150,18 @@ const contractTemplates = [
     inputs: [
       { name: "client_name", label: "Client Name", type: "text", required: true },
       { name: "designer_name", label: "Designer Name", type: "text", required: true },
-      {
-        name: "design_scope",
-        label: "Design Scope / Deliverables",
-        type: "textarea",
-        required: true
-      },
+      { name: "design_scope", label: "Design Scope / Deliverables", type: "textarea", required: true },
       { name: "deadline", label: "Delivery Deadline", type: "date", required: true },
       { name: "payment_amount", label: "Total Fee", type: "number", required: true },
       { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
     ],
     body: [
-      {
-        text: `This Graphic Design Services Agreement ("Agreement") is made between {{client_name}} ("Client") and {{designer_name}} ("Designer").`
-      },
-      {
-        text: `The Designer agrees to provide the following design services: {{design_scope}}.`
-      },
-      {
-        text: `The Designer shall deliver the final design materials on or before {{deadline}}.`
-      },
-      {
-        text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services provided under this Agreement.`
-      },
-      {
-        text: `All intellectual property remains with the Designer until full payment is received. Upon payment, ownership or license terms will apply as agreed.`
-      },
-      {
-        text: `This Agreement is governed by the laws of Nigeria.`
-      }
+      { text: `This Graphic Design Services Agreement ("Agreement") is made between {{client_name}} ("Client") and {{designer_name}} ("Designer").` },
+      { text: `The Designer agrees to provide the following design services: {{design_scope}}.` },
+      { text: `The Designer shall deliver the final design materials on or before {{deadline}}.` },
+      { text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services provided under this Agreement.` },
+      { text: `All intellectual property remains with the Designer until full payment is received. Upon payment, ownership or license terms will apply as agreed.` },
+      { text: `This Agreement is governed by the laws of Nigeria.` }
     ]
   },
   {
@@ -289,37 +173,17 @@ const contractTemplates = [
     inputs: [
       { name: "client_name", label: "Client Name", type: "text", required: true },
       { name: "stylist_name", label: "Stylist / Barber Name", type: "text", required: true },
-      {
-        name: "service_type",
-        label: "Type of Service (e.g. haircut, braids, beard trim)",
-        type: "text",
-        required: true
-      },
-      {
-        name: "appointment_date",
-        label: "Appointment Date",
-        type: "date",
-        required: true
-      },
+      { name: "service_type", label: "Type of Service (e.g. haircut, braids, beard trim)", type: "text", required: true },
+      { name: "appointment_date", label: "Appointment Date", type: "date", required: true },
       { name: "price", label: "Service Fee", type: "number", required: true },
       { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
     ],
     body: [
-      {
-        text: `This Personal Grooming Services Agreement ("Agreement") is entered into between {{client_name}} ("Client") and {{stylist_name}} ("Service Provider").`
-      },
-      {
-        text: `The Service Provider agrees to perform the following service: {{service_type}} on {{appointment_date}}.`
-      },
-      {
-        text: `The Client agrees to pay {{price}} {{currency}} for the service upon completion unless otherwise agreed.`
-      },
-      {
-        text: `The Service Provider agrees to perform services professionally and in accordance with standard industry practices.`
-      },
-      {
-        text: `This Agreement is governed by the laws of Nigeria.`
-      }
+      { text: `This Personal Grooming Services Agreement ("Agreement") is entered into between {{client_name}} ("Client") and {{stylist_name}} ("Service Provider").` },
+      { text: `The Service Provider agrees to perform the following service: {{service_type}} on {{appointment_date}}.` },
+      { text: `The Client agrees to pay {{price}} {{currency}} for the service upon completion unless otherwise agreed.` },
+      { text: `The Service Provider agrees to perform services professionally and in accordance with standard industry practices.` },
+      { text: `This Agreement is governed by the laws of Nigeria.` }
     ]
   },
   {
@@ -331,40 +195,33 @@ const contractTemplates = [
     inputs: [
       { name: "client_name", label: "Vehicle Owner Name", type: "text", required: true },
       { name: "mechanic_name", label: "Mechanic / Workshop Name", type: "text", required: true },
-      {
-        name: "vehicle_details",
-        label: "Vehicle Details (make, model, plate number)",
-        type: "text",
-        required: true
-      },
-      {
-        name: "repair_description",
-        label: "Description of Repairs",
-        type: "textarea",
-        required: true
-      },
+      { name: "vehicle_details", label: "Vehicle Details (make, model, plate number)", type: "text", required: true },
+      { name: "repair_description", label: "Description of Repairs", type: "textarea", required: true },
       { name: "estimated_cost", label: "Estimated Cost", type: "number", required: true },
       { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
     ],
     body: [
-      {
-        text: `This Vehicle Repair Services Agreement ("Agreement") is made between {{client_name}} ("Client") and {{mechanic_name}} ("Service Provider").`
-      },
-      {
-        text: `The Service Provider agrees to perform the following repairs on the vehicle described as {{vehicle_details}}: {{repair_description}}.`
-      },
-      {
-        text: `The estimated repair cost is {{estimated_cost}} {{currency}}. Any additional costs must be approved by the Client before proceeding.`
-      },
-      {
-        text: `The Service Provider is not responsible for pre-existing faults or issues unrelated to the agreed repairs.`
-      },
-      {
-        text: `This Agreement is governed by the laws of Nigeria.`
-      }
+      { text: `This Vehicle Repair Services Agreement ("Agreement") is made between {{client_name}} ("Client") and {{mechanic_name}} ("Service Provider").` },
+      { text: `The Service Provider agrees to perform the following repairs on the vehicle described as {{vehicle_details}}: {{repair_description}}.` },
+      { text: `The estimated repair cost is {{estimated_cost}} {{currency}}. Any additional costs must be approved by the Client before proceeding.` },
+      { text: `The Service Provider is not responsible for pre-existing faults or issues unrelated to the agreed repairs.` },
+      { text: `This Agreement is governed by the laws of Nigeria.` }
     ]
   }
 ];
+
+// ---------- TERMS & CONDITIONS ----------
+const termsAndConditions = [
+  "TERMS AND CONDITIONS",
+  "1. Governing Law: This Agreement is governed by the laws of Nigeria.",
+  "2. Liability: Except for willful misconduct or gross negligence, neither party shall be liable for indirect, incidental, special, or consequential damages.",
+  "3. Confidentiality: Each party will keep confidential information of the other private and use it only for the purposes of performing this Agreement.",
+  "4. Amendment: Any amendment must be in writing and signed by both parties.",
+  "5. Severability: If any provision is held invalid, the remainder of the Agreement remains in force.",
+  "6. Entire Agreement: This document (and any attachments) constitutes the entire agreement between the parties.",
+  "7. Notices: Notices must be in writing and delivered by email or courier to the addresses provided.",
+  "8. Signatures: Electronic copies, scanned signatures, or typed names shall be treated as original for enforcement purposes."
+].join("\n\n");
 
 // ---------- TEMPLATE RENDER HELPERS ----------
 function replacePlaceholders(text, data) {
@@ -385,7 +242,8 @@ function renderContract(template, rawData) {
     })
     .map(block => replacePlaceholders(block.text, data));
 
-  return paragraphs.join("\n\n");
+  // Append Terms & Conditions after template body
+  return paragraphs.join("\n\n") + "\n\n" + termsAndConditions;
 }
 
 // ---------- SIGNATURE + DOWNLOAD HELPERS ----------
@@ -416,8 +274,6 @@ function buildSignatureBlock() {
   ].join("\n");
 }
 
-
-
 function slugify(str) {
   return (str || "contract")
     .toLowerCase()
@@ -438,9 +294,9 @@ async function downloadDocx(title, body, signatureBlock) {
     new Paragraph({ text: title, heading: "HEADING_1" }),
     new Paragraph(headerLine),
     new Paragraph(""),
-    ...body.split("\n\n").map(p => new Paragraph(p)),
+    ...body.split("\n\n").map(p => new Paragraph({ text: p, spacing: { after: 120 } })),
     new Paragraph(""),
-    ...signatureBlock.split("\n").map(p => new Paragraph(p))
+    ...signatureBlock.split("\n").map(p => new Paragraph({ text: p }))
   ];
 
   const doc = new Document({
@@ -468,7 +324,7 @@ function downloadPdf(title, body, signatureBlock) {
   doc.text(title || "Contract", pageWidth / 2, 50, { align: "center" });
 
   doc.setFontSize(9);
-   doc.setFont("helvetica", "italic");
+  doc.setFont("helvetica", "italic");
   doc.text(
     "Generated by your contract tool (to be reviewed by legal counsel).",
     pageWidth / 2,
@@ -506,12 +362,12 @@ function downloadPdf(title, body, signatureBlock) {
   }
 
   cursorY += 20;
-   doc.setFont("helvetica", "bold");
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
   doc.text("SIGNATURES", marginX, cursorY);
   cursorY += 16;
 
-    doc.setFont("helvetica", "normal"); 
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(11);
   writeLines(sigLines);
 
@@ -541,42 +397,26 @@ function StepIndicator({ label, active, done }) {
 
 // ---------- MAIN APP ----------
 function App() {
-  const [selectedTemplateId, setSelectedTemplateId] = useState(
-    contractTemplates[0]?.id || ""
-  );
+  const [selectedTemplateId, setSelectedTemplateId] = useState(contractTemplates[0]?.id || "");
   const [formData, setFormData] = useState({});
   const [step, setStep] = useState(1); // 1 = choose template, 2 = fill form, 3 = preview & download
   const [showAllTemplates, setShowAllTemplates] = useState(false);
   const [editedText, setEditedText] = useState("");
 
-  const selectedTemplate = useMemo(
-    () => contractTemplates.find(t => t.id === selectedTemplateId),
-    [selectedTemplateId]
-  );
+  const selectedTemplate = useMemo(() => contractTemplates.find(t => t.id === selectedTemplateId), [selectedTemplateId]);
 
-  const visibleTemplates = useMemo(
-    () => (showAllTemplates ? contractTemplates : contractTemplates.slice(0, 4)),
-    [showAllTemplates]
-  );
+  const visibleTemplates = useMemo(() => (showAllTemplates ? contractTemplates : contractTemplates.slice(0, 4)), [showAllTemplates]);
 
-  const finalText = useMemo(
-    () => (selectedTemplate ? renderContract(selectedTemplate, formData) : ""),
-    [selectedTemplate, formData]
-  );
+  const finalText = useMemo(() => (selectedTemplate ? renderContract(selectedTemplate, formData) : ""), [selectedTemplate, formData]);
 
   const handleInputChange = (name, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleNext = () => {
     if (step === 1 && selectedTemplate) {
       const initialValues = {};
-      selectedTemplate.inputs.forEach(input => {
-        initialValues[input.name] = "";
-      });
+      selectedTemplate.inputs.forEach(input => { initialValues[input.name] = ""; });
       setFormData(initialValues);
       setStep(2);
     } else if (step === 2 && selectedTemplate) {
@@ -586,172 +426,110 @@ function App() {
     }
   };
 
-  const handleBack = () => {
-    setStep(prev => Math.max(1, prev - 1));
-  };
+  const handleBack = () => setStep(prev => Math.max(1, prev - 1));
 
   const title = selectedTemplate?.name || "Contract";
   const signatureBlock = buildSignatureBlock();
 
   const textForDownload = (editedText || finalText || "").trim();
 
-  const handleDownloadTxt = () => {
-    if (!textForDownload) return;
-    downloadTxt(title, textForDownload, signatureBlock);
-  };
-
-  const handleDownloadDocx = () => {
-    if (!textForDownload) return;
-    downloadDocx(title, textForDownload, signatureBlock);
-  };
-
-  const handleDownloadPdf = () => {
-    if (!textForDownload) return;
-    downloadPdf(title, textForDownload, signatureBlock);
-  };
+  const handleDownloadTxt = () => { if (!textForDownload) return; downloadTxt(title, textForDownload, signatureBlock); };
+  const handleDownloadDocx = () => { if (!textForDownload) return; downloadDocx(title, textForDownload, signatureBlock); };
+  const handleDownloadPdf = () => { if (!textForDownload) return; downloadPdf(title, textForDownload, signatureBlock); };
 
   return (
     <div className="min-h-screen bg-slate-950 px-4 py-6 text-slate-100">
-      <header className="mx-auto mb-6 max-w-4xl">
-        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-          Contract Generator
-        </h1>
-        <p className="mt-2 text-xs text-slate-400 sm:text-sm">
-          Generate profession-specific contracts and download as PDF, DOCX, or TXT.
-        </p>
-      </header>
+  <header className="mx-auto mb-6 max-w-4xl flex items-center gap-3">
+  <img src={logo} alt="Logo" className="h-10 w-10 rounded-lg" />
+  <div>
+    <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+      Contract Generator
+    </h1>
+    <p className="mt-1 text-xs text-slate-400 sm:text-sm">
+      Generate profession-specific contracts and download as PDF, DOCX, or TXT.
+    </p>
+  </div>
+</header>
+
+
 
       <main className="mx-auto max-w-4xl rounded-2xl border border-slate-800 bg-slate-950/80 p-4 shadow-2xl shadow-black/60 sm:p-6">
         {/* Steps */}
         <div className="mb-4 flex flex-wrap gap-4">
           <StepIndicator label="1. Choose template" active={step === 1} done={step > 1} />
           <StepIndicator label="2. Fill details" active={step === 2} done={step > 2} />
-          <StepIndicator
-            label="3. Preview & download"
-            active={step === 3}
-            done={false}
-          />
+          <StepIndicator label="3. Preview & download" active={step === 3} done={false} />
         </div>
 
-        {/* Content grid */}
         <div className="grid gap-4 md:grid-cols-[1.1fr_minmax(0,1fr)]">
-          {/* Left side */}
           <div className="rounded-xl bg-slate-950/60 p-3 sm:p-4">
             {step === 1 && (
               <section>
-                <h2 className="mb-1 text-base font-medium sm:text-lg">
-                  Select a contract
-                </h2>
-                <p className="mb-3 text-xs text-slate-400 sm:text-sm">
-                  Pick a template based on the profession and type of work.
-                </p>
+                <h2 className="mb-1 text-base font-medium sm:text-lg">Select a contract</h2>
+                <p className="mb-3 text-xs text-slate-400 sm:text-sm">Pick a template based on the profession and type of work.</p>
 
                 <div className="flex flex-col gap-2">
                   {visibleTemplates.map(template => {
                     const isActive = template.id === selectedTemplateId;
                     return (
-                      <button
-                        key={template.id}
-                        type="button"
-                        onClick={() => setSelectedTemplateId(template.id)}
+                      <button key={template.id} type="button" onClick={() => setSelectedTemplateId(template.id)}
                         className={[
                           "w-full rounded-xl border px-3 py-3 text-left text-sm transition",
                           "bg-slate-950/80 hover:border-slate-500 hover:bg-slate-900",
-                          isActive
-                            ? "border-blue-400 bg-slate-900/80 shadow-[0_0_0_1px_rgba(96,165,250,0.35)]"
-                            : "border-slate-800"
-                        ].join(" ")}
-                      >
+                          isActive ? "border-blue-400 bg-slate-900/80 shadow-[0_0_0_1px_rgba(96,165,250,0.35)]" : "border-slate-800"
+                        ].join(" ")}>
                         <div className="mb-1 flex items-center justify-between text-xs text-slate-400">
-                          <span className="rounded-full bg-slate-900 px-2 py-0.5 text-[10px] uppercase tracking-wide text-blue-300">
-                            {template.profession}
-                          </span>
-                          <span className="text-[10px] text-slate-500">
-                            Jurisdiction: {template.jurisdiction}
-                          </span>
+                          <span className="rounded-full bg-slate-900 px-2 py-0.5 text-[10px] uppercase tracking-wide text-blue-300">{template.profession}</span>
+                          <span className="text-[10px] text-slate-500">Jurisdiction: {template.jurisdiction}</span>
                         </div>
-                        <div className="mb-1 text-sm font-semibold text-slate-100">
-                          {template.name}
-                        </div>
-                        <div className="text-[11px] text-slate-400">
-                          {template.description}
-                        </div>
+                        <div className="mb-1 text-sm font-semibold text-slate-100">{template.name}</div>
+                        <div className="text-[11px] text-slate-400">{template.description}</div>
                       </button>
                     );
                   })}
                 </div>
 
-                {!showAllTemplates && contractTemplates.length > 4 && (
-                  <div className="mt-3">
-                    <button
-                      type="button"
-                      onClick={() => setShowAllTemplates(true)}
-                      className="text-xs sm:text-sm font-medium text-blue-300 hover:text-blue-200"
-                    >
-                      View more templates
-                    </button>
-                  </div>
-                )}
+           {/* VIEW MORE / VIEW LESS BUTTON */}
+{contractTemplates.length > 4 && (
+  <div className="mt-3">
+    <button
+      type="button"
+      onClick={() => setShowAllTemplates(prev => !prev)}
+      className="text-xs sm:text-sm font-medium text-blue-300 hover:text-blue-200"
+    >
+      {showAllTemplates ? "View fewer templates" : "View more templates"}
+    </button>
+  </div>
+)}
+
               </section>
             )}
 
             {step === 2 && selectedTemplate && (
               <section>
-                <h2 className="mb-1 text-base font-medium sm:text-lg">
-                  {selectedTemplate.name}
-                </h2>
-                <p className="mb-3 text-xs text-slate-400 sm:text-sm">
-                  Fill in the details below to generate your contract.
-                </p>
+                <h2 className="mb-1 text-base font-medium sm:text-lg">{selectedTemplate.name}</h2>
+                <p className="mb-3 text-xs text-slate-400 sm:text-sm">Fill in the details below to generate your contract.</p>
 
-                <form
-                  onSubmit={e => {
-                    e.preventDefault();
-                    handleNext();
-                  }}
-                  className="space-y-3"
-                >
+                <form onSubmit={e => { e.preventDefault(); handleNext(); }} className="space-y-3">
                   {selectedTemplate.inputs.map(input => (
                     <div key={input.name} className="space-y-1">
                       <label className="block text-xs font-medium text-slate-200 sm:text-sm">
                         {input.label}
-                        {input.required && (
-                          <span className="ml-1 text-[11px] text-orange-400">*</span>
-                        )}
+                        {input.required && <span className="ml-1 text-[11px] text-orange-400">*</span>}
                       </label>
                       {input.type === "textarea" ? (
-                        <textarea
-                          className="block w-full rounded-lg border border-slate-700 bg-slate-950/80 px-3 py-2 text-xs text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 sm:text-sm"
-                          value={formData[input.name] || ""}
-                          required={input.required}
-                          onChange={e => handleInputChange(input.name, e.target.value)}
-                        />
+                        <textarea className="block w-full rounded-lg border border-slate-700 bg-slate-950/80 px-3 py-2 text-xs text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 sm:text-sm"
+                          value={formData[input.name] || ""} required={input.required} onChange={e => handleInputChange(input.name, e.target.value)} />
                       ) : (
-                        <input
-                          className="block w-full rounded-lg border border-slate-700 bg-slate-950/80 px-3 py-2 text-xs text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 sm:text-sm"
-                          type={input.type}
-                          value={formData[input.name] || ""}
-                          required={input.required}
-                          onChange={e => handleInputChange(input.name, e.target.value)}
-                        />
+                        <input className="block w-full rounded-lg border border-slate-700 bg-slate-950/80 px-3 py-2 text-xs text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 sm:text-sm"
+                          type={input.type} value={formData[input.name] || ""} required={input.required} onChange={e => handleInputChange(input.name, e.target.value)} />
                       )}
                     </div>
                   ))}
 
                   <div className="mt-3 flex justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={handleBack}
-                      className="inline-flex items-center rounded-full border border-slate-600 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-100 hover:border-slate-400 sm:text-sm"
-                    >
-                      Back
-                    </button>
-                    <button
-                      type="submit"
-                      className="inline-flex items-center rounded-full bg-gradient-to-r from-blue-600 to-violet-600 px-3 py-2 text-xs font-semibold text-slate-50 shadow-md hover:from-blue-500 hover:to-violet-500 sm:text-sm"
-                    >
-                      Generate Preview
-                    </button>
+                    <button type="button" onClick={() => setStep(1)} className="inline-flex items-center rounded-full border border-slate-600 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-100 hover:border-slate-400 sm:text-sm">Back</button>
+                    <button type="submit" className="inline-flex items-center rounded-full bg-gradient-to-r from-blue-600 to-violet-600 px-3 py-2 text-xs font-semibold text-slate-50 shadow-md hover:from-blue-500 hover:to-violet-500 sm:text-sm">Generate Preview</button>
                   </div>
                 </form>
               </section>
@@ -759,46 +537,15 @@ function App() {
 
             {step === 3 && selectedTemplate && (
               <section>
-                <h2 className="mb-1 text-base font-medium sm:text-lg">
-                  Preview & download
-                </h2>
-                <p className="mb-3 text-xs text-slate-400 sm:text-sm">
-                  Review the contract on the right, then download it in your preferred format.
-                </p>
+                <h2 className="mb-1 text-base font-medium sm:text-lg">Preview & download</h2>
+                <p className="mb-3 text-xs text-slate-400 sm:text-sm">Review the contract on the right, then download it in your preferred format.</p>
                 <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    disabled={!textForDownload}
-                    onClick={handleDownloadPdf}
-                    className="inline-flex items-center rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-900 shadow hover:bg-white disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
-                  >
-                    Download PDF
-                  </button>
-                  <button
-                    type="button"
-                    disabled={!textForDownload}
-                    onClick={handleDownloadDocx}
-                    className="inline-flex items-center rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-slate-100 ring-1 ring-slate-600 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
-                  >
-                    Download DOCX
-                  </button>
-                  <button
-                    type="button"
-                    disabled={!textForDownload}
-                    onClick={handleDownloadTxt}
-                    className="inline-flex items-center rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-slate-100 ring-1 ring-slate-600 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
-                  >
-                    Download TXT
-                  </button>
+                  <button type="button" disabled={!textForDownload} onClick={handleDownloadPdf} className="inline-flex items-center rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-900 shadow hover:bg-white disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm">Download PDF</button>
+                  <button type="button" disabled={!textForDownload} onClick={handleDownloadDocx} className="inline-flex items-center rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-slate-100 ring-1 ring-slate-600 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm">Download DOCX</button>
+                  <button type="button" disabled={!textForDownload} onClick={handleDownloadTxt} className="inline-flex items-center rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-slate-100 ring-1 ring-slate-600 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm">Download TXT</button>
                 </div>
                 <div className="mt-3">
-                  <button
-                    type="button"
-                    onClick={handleBack}
-                    className="inline-flex items-center rounded-full border border-slate-600 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-100 hover:border-slate-400 sm:text-sm"
-                  >
-                    Back
-                  </button>
+                  <button type="button" onClick={() => setStep(2)} className="inline-flex items-center rounded-full border border-slate-600 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-100 hover:border-slate-400 sm:text-sm">Back</button>
                 </div>
               </section>
             )}
@@ -806,47 +553,24 @@ function App() {
 
           {/* Right side – preview */}
           <div className="flex flex-col rounded-xl border border-slate-800 bg-slate-950/60 p-3 sm:p-4">
-            <h3 className="mb-2 text-xs font-medium text-slate-200 sm:text-sm">
-              Contract Preview
-            </h3>
+            <h3 className="mb-2 text-xs font-medium text-slate-200 sm:text-sm">Contract Preview</h3>
             <div className="flex-1 overflow-auto rounded-lg border border-slate-800 bg-slate-950 p-3 text-xs sm:text-sm">
               {step === 3 && (editedText || finalText) ? (
-                <textarea
-                  className="block h-full min-h-[260px] w-full resize-vertical rounded-lg border border-slate-700 bg-slate-950/90 px-3 py-2 font-mono text-[11px] leading-relaxed text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 sm:text-xs"
-                  value={editedText || finalText}
-                  onChange={e => setEditedText(e.target.value)}
-                />
+                <textarea className="block h-full min-h-[260px] w-full resize-vertical rounded-lg border border-slate-700 bg-slate-950/90 px-3 py-2 font-mono text-[11px] leading-relaxed text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 sm:text-xs"
+                  value={editedText || finalText} onChange={e => setEditedText(e.target.value)} />
               ) : finalText ? (
-                <pre className="whitespace-pre-wrap font-mono text-[11px] leading-relaxed sm:text-xs">
-                  {finalText}
-                </pre>
+                <pre className="whitespace-pre-wrap font-mono text-[11px] leading-relaxed sm:text-xs">{finalText}</pre>
               ) : (
-                <p className="text-xs text-slate-500 sm:text-sm">
-                  The generated contract text will appear here once you fill the form and
-                  generate a preview. You can then edit it before downloading.
-                </p>
+                <p className="text-xs text-slate-500 sm:text-sm">The generated contract text will appear here once you fill the form and generate a preview. You can then edit it before downloading.</p>
               )}
             </div>
-            <p className="mt-2 text-[10px] leading-relaxed text-slate-500 sm:text-[11px]">
-              <span className="font-semibold text-slate-300">Disclaimer:</span> This tool
-              provides general document templates and does not constitute legal advice.
-              A qualified lawyer should review and adapt each contract for your specific
-              situation and jurisdiction.
-            </p>
+            <p className="mt-2 text-[10px] leading-relaxed text-slate-500 sm:text-[11px]"><span className="font-semibold text-slate-300">Disclaimer:</span> This tool provides general document templates and does not constitute legal advice. A qualified lawyer should review and adapt each contract for your specific situation and jurisdiction.</p>
           </div>
         </div>
 
-        {/* Footer action on step 1 */}
         {step === 1 && (
           <div className="mt-4 flex justify-end">
-            <button
-              type="button"
-              disabled={!selectedTemplate}
-              onClick={handleNext}
-              className="inline-flex items-center rounded-full bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-2 text-xs font-semibold text-slate-50 shadow-md hover:from-blue-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
-            >
-              Continue
-            </button>
+            <button type="button" disabled={!selectedTemplateId} onClick={() => { setStep(2); const initialValues = {}; selectedTemplate.inputs?.forEach(i => initialValues[i.name] = ""); setFormData(initialValues); }} className="inline-flex items-center rounded-full bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-2 text-xs font-semibold text-slate-50 shadow-md hover:from-blue-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm">Continue</button>
           </div>
         )}
       </main>
