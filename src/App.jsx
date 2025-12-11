@@ -4,6 +4,7 @@ import { jsPDF } from "jspdf";
 import { Document, Packer, Paragraph } from "docx";
 import { saveAs } from "file-saver";
 import logo from "./assets/logo.png";
+import { Analytics } from "@vercel/analytics/react"
 
 
 // ---------- CONTRACT TEMPLATES (DIFFERENT PROFESSIONS) ----------
@@ -574,6 +575,7 @@ function App() {
           </div>
         )}
       </main>
+        <Analytics />
     </div>
   );
 }
