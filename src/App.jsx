@@ -393,19 +393,30 @@ function buildSignatureBlock() {
   return [
     "",
     "Signatures",
-    "----------",
+    "",
+    "----------------------------------------",
     "",
     "Client:",
-    "Name: _________________________________",
-    "Signature: ____________________________",
-    "Date: _________________________________",
+    "",
+    "Name:        ________________________________________________",
+    "",
+    "Signature:   ________________________________________________",
+    "",
+    "Date:        ________________________________________________",
+    "",
     "",
     "Service Provider:",
-    "Name: _________________________________",
-    "Signature: ____________________________",
-    "Date: _________________________________"
+    "",
+    "Name:        ________________________________________________",
+    "",
+    "Signature:   ________________________________________________",
+    "",
+    "Date:        ________________________________________________",
+    ""
   ].join("\n");
 }
+
+
 
 function slugify(str) {
   return (str || "contract")
@@ -497,7 +508,7 @@ function downloadPdf(title, body, signatureBlock) {
   cursorY += 20;
    doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
-  doc.text("Signatures", marginX, cursorY);
+  doc.text("SIGNATURES", marginX, cursorY);
   cursorY += 16;
 
     doc.setFont("helvetica", "normal"); 
