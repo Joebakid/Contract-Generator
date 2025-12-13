@@ -9,6 +9,217 @@ import { Analytics } from "@vercel/analytics/react"
 
 // ---------- CONTRACT TEMPLATES (DIFFERENT PROFESSIONS) ----------
 const contractTemplates = [
+    {
+  id: "service_agreement_short_term",
+  profession: "Short-Term / One-Time",
+  name: "Short-Term Services Agreement",
+  description: "One-day, few-days, or bi-weekly service contract.",
+  jurisdiction: "Nigeria",
+  inputs: [
+    { name: "client_name", label: "Client Name", type: "text", required: true },
+    { name: "provider_name", label: "Service Provider Name", type: "text", required: true },
+    { name: "service_description", label: "Service Description", type: "textarea", required: true },
+
+    {
+      name: "contract_type",
+      label: "Contract Duration Type (one-day, date-range, bi-weekly)",
+      type: "text",
+      required: true
+    },
+
+    { name: "start_date", label: "Start Date", type: "date", required: true },
+    { name: "end_date", label: "End Date (if applicable)", type: "date", required: false },
+
+    {
+      name: "biweekly_periods",
+      label: "Number of Bi-Weekly Periods (if bi-weekly)",
+      type: "number",
+      required: false
+    },
+
+    { name: "payment_amount", label: "Total Payment", type: "number", required: true },
+    { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
+  ],
+
+  body: [
+    {
+      text: `This Short-Term Services Agreement  is entered into between {{client_name}} ("Client") and {{provider_name}} ("Service Provider").`
+    },
+    {
+      text: `The Service Provider agrees to provide the following services: {{service_description}}.`
+    },
+    {
+      text: `This Agreement shall commence on {{start_date}}{{duration_clause}}.`
+    },
+    {
+      text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services provided under this Agreement. Payment is due upon completion unless otherwise agreed in writing.`
+    },
+    {
+      text: `This Agreement automatically terminates upon completion of the agreed services without further notice.`
+    },
+    {
+      text: `This Agreement is governed by the laws of Nigeria.`
+    }
+  ],
+
+  transformData: data => {
+    let duration = "";
+
+    if (data.contract_type?.toLowerCase().includes("one")) {
+      duration = " and shall be valid for a single day only";
+    } 
+    else if (data.contract_type?.toLowerCase().includes("bi")) {
+      duration = ` and shall run on a bi-weekly basis for ${data.biweekly_periods || "an agreed number of"} periods`;
+    } 
+    else if (data.end_date) {
+      duration = ` and shall continue until ${data.end_date}`;
+    } 
+    else {
+      duration = " and shall continue until completion of the services";
+    }
+
+    return {
+      ...data,
+      duration_clause: duration
+    };
+  }
+},
+{
+  id: "service_agreement_uiux",
+  profession: "UI / UX Designer",
+  name: "UI / UX Design Services Agreement",
+  description: "User interface and user experience design for digital products.",
+  jurisdiction: "Nigeria",
+  inputs: [
+    { name: "client_name", label: "Client / Company Name", type: "text", required: true },
+    { name: "designer_name", label: "UI/UX Designer Name", type: "text", required: true },
+    { name: "project_description", label: "Project Description", type: "textarea", required: true },
+    { name: "deliverables", label: "Deliverables (e.g. wireframes, Figma files)", type: "textarea", required: true },
+    { name: "revisions", label: "Number of Included Revisions", type: "number", required: true },
+    { name: "deadline", label: "Project Deadline", type: "date", required: true },
+    { name: "payment_amount", label: "Total Project Fee", type: "number", required: true },
+    { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
+  ],
+
+  body: [
+    {
+      text: `This UI/UX Design Services Agreement ("Agreement") is entered into between {{client_name}} ("Client") and {{designer_name}} ("Designer").`
+    },
+    {
+      text: `The Designer agrees to provide UI/UX design services for the following project: {{project_description}}.`
+    },
+    {
+      text: `The agreed deliverables include: {{deliverables}}.`
+    },
+    {
+      text: `The Client is entitled to {{revisions}} revision(s). Additional revisions or changes outside the agreed scope may attract extra charges.`
+    },
+    {
+      text: `The project shall be completed on or before {{deadline}}, subject to timely feedback and approvals from the Client.`
+    },
+    {
+      text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services rendered.`
+    },
+    {
+      text: `All design files and intellectual property remain the property of the Designer until full payment is received.`
+    },
+    {
+      text: `The Designer does not guarantee specific user engagement, conversion rates, or business outcomes resulting from the designs.`
+    },
+    {
+      text: `This Agreement is governed by the laws of Nigeria.`
+    }
+  ]
+}
+,{
+  id: "service_agreement_graphic_design_pro",
+  profession: "Graphic Designer",
+  name: "Graphic Design Services Agreement",
+  description: "Branding, logos, marketing, and digital design services.",
+  jurisdiction: "Nigeria",
+  inputs: [
+    { name: "client_name", label: "Client Name", type: "text", required: true },
+    { name: "designer_name", label: "Graphic Designer Name", type: "text", required: true },
+    { name: "design_scope", label: "Design Scope / Deliverables", type: "textarea", required: true },
+    { name: "revisions", label: "Included Revisions", type: "number", required: true },
+    { name: "deadline", label: "Delivery Deadline", type: "date", required: true },
+    { name: "payment_amount", label: "Total Fee", type: "number", required: true },
+    { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
+  ],
+
+  body: [
+    {
+      text: `This Graphic Design Services Agreement ("Agreement") is made between {{client_name}} ("Client") and {{designer_name}} ("Designer").`
+    },
+    {
+      text: `The Designer agrees to provide the following design services: {{design_scope}}.`
+    },
+    {
+      text: `The Client is entitled to {{revisions}} revision(s). Any additional revisions beyond this may incur additional fees.`
+    },
+    {
+      text: `Final designs shall be delivered on or before {{deadline}}.`
+    },
+    {
+      text: `The Client agrees to pay {{payment_amount}} {{currency}} for the services provided.`
+    },
+    {
+      text: `The Designer shall not be held responsible for printing errors, third-party misuse, or brand performance after delivery.`
+    },
+    {
+      text: `All intellectual property remains with the Designer until full payment is received.`
+    },
+    {
+      text: `This Agreement is governed by the laws of Nigeria.`
+    }
+  ]
+},
+{
+  id: "service_agreement_content_creator",
+  profession: "Content Creator",
+  name: "Content Creation Services Agreement",
+  description: "Digital content creation for brands, social media, and marketing.",
+  jurisdiction: "Nigeria",
+  inputs: [
+    { name: "client_name", label: "Client / Brand Name", type: "text", required: true },
+    { name: "creator_name", label: "Content Creator Name", type: "text", required: true },
+    { name: "content_type", label: "Type of Content (e.g. videos, posts, reels)", type: "text", required: true },
+    { name: "platforms", label: "Platforms (e.g. Instagram, TikTok, YouTube)", type: "text", required: true },
+    { name: "deliverables", label: "Number of Deliverables", type: "text", required: true },
+    { name: "deadline", label: "Delivery Date", type: "date", required: true },
+    { name: "fee", label: "Total Fee", type: "number", required: true },
+    { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
+  ],
+
+  body: [
+    {
+      text: `This Content Creation Services Agreement ("Agreement") is entered into between {{client_name}} ("Client") and {{creator_name}} ("Creator").`
+    },
+    {
+      text: `The Creator agrees to produce the following content: {{content_type}} for use on {{platforms}}.`
+    },
+    {
+      text: `The agreed deliverables include: {{deliverables}}, to be delivered on or before {{deadline}}.`
+    },
+    {
+      text: `The Client agrees to pay {{fee}} {{currency}} for the content produced under this Agreement.`
+    },
+    {
+      text: `The Creator does not guarantee specific engagement metrics, reach, sales, or audience growth.`
+    },
+    {
+      text: `Content usage rights are granted to the Client upon full payment, limited to agreed platforms and purposes unless otherwise stated in writing.`
+    },
+    {
+      text: `The Client agrees not to alter, resell, or reuse the content beyond the agreed scope without the Creator’s consent.`
+    },
+    {
+      text: `This Agreement is governed by the laws of Nigeria.`
+    }
+  ]
+}
+
+,
   {
     id: "service_agreement_basic",
     profession: "General Service",
@@ -65,6 +276,81 @@ const contractTemplates = [
       { text: `This Agreement is governed by the laws of Nigeria, and both parties agree to resolve disputes in good faith before considering legal action.` }
     ]
   },
+  {
+  id: "service_agreement_computer_repair",
+  profession: "Computer Technician",
+  name: "Computer Repair Services Agreement",
+  description: "Repair, diagnostics, and maintenance of computers and laptops.",
+  jurisdiction: "Nigeria",
+  inputs: [
+    { name: "client_name", label: "Client Name", type: "text", required: true },
+    { name: "technician_name", label: "Technician / Repair Shop Name", type: "text", required: true },
+
+    {
+      name: "device_details",
+      label: "Device Details (brand, model, serial number)",
+      type: "text",
+      required: true
+    },
+
+    {
+      name: "reported_issue",
+      label: "Reported Problem / Fault",
+      type: "textarea",
+      required: true
+    },
+
+    {
+      name: "repair_services",
+      label: "Repair / Diagnostic Services to be Performed",
+      type: "textarea",
+      required: true
+    },
+
+    { name: "intake_date", label: "Device Intake Date", type: "date", required: true },
+
+    {
+      name: "estimated_cost",
+      label: "Estimated Repair Cost",
+      type: "number",
+      required: true
+    },
+
+    { name: "currency", label: "Currency (e.g. NGN, USD)", type: "text", required: true }
+  ],
+
+  body: [
+    {
+      text: `This Computer Repair Services Agreement ("Agreement") is made between {{client_name}} ("Client") and {{technician_name}} ("Service Provider").`
+    },
+    {
+      text: `The Client has presented the following device for repair: {{device_details}}. The reported issue is described as: {{reported_issue}}.`
+    },
+    {
+      text: `The Service Provider agrees to perform the following diagnostic and repair services: {{repair_services}}. Services shall commence on {{intake_date}}.`
+    },
+    {
+      text: `The estimated cost for the repair services is {{estimated_cost}} {{currency}}. Any additional repairs or costs outside this estimate must be approved by the Client before proceeding.`
+    },
+    {
+      text: `The Client acknowledges that computer components, including but not limited to motherboards, screens, connectors, chips, storage devices, and internal cables, are fragile and may fail, deteriorate, or become damaged during standard diagnostic or repair procedures due to pre-existing conditions or manufacturing defects.`
+    },
+    {
+      text: `The Service Provider shall not be held liable for any damage, data loss, or component failure that occurs as a result of reasonable repair efforts, handling, or testing, provided such actions are performed in a professional manner.`
+    },
+    {
+      text: `The Client agrees that the Service Provider is not responsible for loss of data and confirms that all important data has been backed up prior to repair.`
+    },
+    {
+      text: `This Agreement shall terminate upon completion of the repair services or return of the device to the Client, whether repaired or deemed irreparable.`
+    },
+    {
+      text: `This Agreement is governed by the laws of Nigeria, and both parties agree to act in good faith.`
+    }
+  ]
+}
+
+  ,
   {
     id: "service_agreement_photography",
     profession: "Photographer",
@@ -208,7 +494,9 @@ const contractTemplates = [
       { text: `The Service Provider is not responsible for pre-existing faults or issues unrelated to the agreed repairs.` },
       { text: `This Agreement is governed by the laws of Nigeria.` }
     ]
-  }
+  },
+
+
 ];
 
 // ---------- TERMS & CONDITIONS ----------
