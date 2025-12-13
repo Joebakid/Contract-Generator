@@ -1,52 +1,68 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Contract Generator</title>
-
-    <!-- SEO -->
     <meta
       name="description"
       content="Generate professional, profession-specific contracts and download them as PDF, DOCX, or TXT."
     />
-    <meta name="author" content="Contract Generator" />
-    <meta name="theme-color" content="#020617" />
 
-    <!-- Favicon -->
+    <!-- ============== FAVICON ============== -->
+    <!-- Vite serves files in /public at root -->
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
 
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <!-- ============== OPEN GRAPH / SOCIAL SHARE ============== -->
+    <!-- Absolute URLs are REQUIRED -->
     <meta property="og:title" content="Contract Generator" />
     <meta
       property="og:description"
       content="Generate profession-specific contracts and download them instantly as PDF, DOCX, or TXT."
     />
-    <meta property="og:url" content="https://contract-generator-xyz.vercel.app" />
-    <meta property="og:image" content="https://contract-generator-xyz.vercel.app/logo-og.png" />
-    <meta property="og:image:secure_url" content="https://contract-generator-xyz.vercel.app/logo-og.png" />
-    <meta property="og:image:type" content="image/png" />
+    <meta
+      property="og:image"
+      content="https://contract-generator-xyz.vercel.app/logo-og.png"
+    />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Contract Generator Preview" />
+    <meta
+      property="og:url"
+      content="https://contract-generator-xyz.vercel.app"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Contract Generator" />
 
-    <!-- Twitter / X -->
+    <!-- ============== TWITTER / X ============== -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Contract Generator" />
     <meta
       name="twitter:description"
       content="Generate profession-specific contracts and download them instantly as PDF, DOCX, or TXT."
     />
-    <meta name="twitter:image" content="https://contract-generator-xyz.vercel.app/logo-og.png" />
+    <meta
+      name="twitter:image"
+      content="https://contract-generator-xyz.vercel.app/logo-og.png"
+    />
+
+    <!-- Crawling -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Optional: Vercel Analytics handled in React -->
   </head>
 
   <body class="min-h-screen bg-slate-950 text-slate-100 antialiased">
     <div id="root"></div>
 
-    <!-- React entry -->
+    <!-- Vite / React entry -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
