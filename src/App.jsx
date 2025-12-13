@@ -729,7 +729,8 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-950 px-4 py-6 text-slate-100">
   <header className="mx-auto mb-6 max-w-4xl flex items-center gap-3">
-  <img src={logo} alt="Logo" className="h-10 w-10 rounded-lg" />
+<img src="/logo.png" alt="Logo" className="h-10 w-10 rounded-lg" />
+
   <div>
     <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
       Contract Generator
