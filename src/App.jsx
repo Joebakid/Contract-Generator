@@ -863,7 +863,21 @@ function App() {
             <button type="button" disabled={!selectedTemplateId} onClick={() => { setStep(2); const initialValues = {}; selectedTemplate.inputs?.forEach(i => initialValues[i.name] = ""); setFormData(initialValues); }} className="inline-flex items-center rounded-full bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-2 text-xs font-semibold text-slate-50 shadow-md hover:from-blue-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm">Continue</button>
           </div>
         )}
+
+      
       </main>
+      <div className="mt-6 text-center text-xs text-slate-400">
+  Crafted with care by{" "}
+  <a
+    href="https://www.josephbawo.tech/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="font-semibold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent hover:opacity-80"
+  >
+    Joseph Bawo
+  </a>
+</div>
+
         <Analytics />
     </div>
   );
