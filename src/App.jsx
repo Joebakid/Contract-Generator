@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { jsPDF } from "jspdf";
 import { Document, Packer, Paragraph } from "docx";
 import { saveAs } from "file-saver";
-import logo from "./assets/logo.png";
+// import logo from "./assets/logo.png";
 import { Analytics } from "@vercel/analytics/react"
 
 
